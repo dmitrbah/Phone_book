@@ -72,7 +72,46 @@ def copy_data(data: list[str]):
                 print('Введите номер строки заново!')
             else:
                 print('Некоректный ввод выбора! Давайте заново.')
-            
+
+def change_data(data: str) -> str:
+    name = data.split(', ')[0]
+    surname = data.split(', ')[1]
+    fathername = data.split(', ')[2]
+    phone = data.split(', ')[3]
+    print('0 - изменить имя')
+    print('1 - изменить фамилию')
+    print('2 - изменить отчество')
+    print('3 - имзенить номер телефона')
+    choise = input()
+    if choise == '0':
+        change_choise = input('Введите новое имя: ')
+        changed = f'{change_choise}, {surname}, {fathername}, {phone}'
+        return changed
+    elif choise == '1':
+        change_choise = input('Введите новою фамилию: ')
+        changed = f'{name}, {change_choise}, {fathername}, {phone}'
+        return changed
+    elif choise == '2':
+        change_choise = input('Введите новое отчество: ')
+        changed = f'{name}, {surname}, {change_choise}, {phone}'
+        return changed
+    elif choise == '3':
+        change_choise = input('Введите новый номер телефона: ')
+        changed = f'{name}, {surname}, {fathername}, {change_choise}'
+        return changed
+    else:
+        print('Некорректный ввод!')
+
+def change_file(file, first_str, second_str):
+    data = read_file(file)
+    index = 0
+    for i in range(len(data)):
+        if first_str in data[i]:
+            index = i
+    data[index] = second_str
+    with open(file, 'w', encoding='utf-8') as f:
+        f.writelines(data)
+
 def main():
     file_name = 'phone_book.txt'
     flag = True
@@ -82,6 +121,7 @@ def main():
         print('2 - показать записи из справочника')
         print('3 - найти запись в справочнике ')
         print('4 - скопировать данные из справочника в другой файл')
+        print('5 - изменить данные в справочнике')
         answer = input('Выберите действие: ')
         if answer == '0':
             flag = False
@@ -100,6 +140,18 @@ def main():
         elif answer == '4':
             data = read_file(file_name)
             copy_data(data)
+        elif answer == '5':
+            data = read_file(file_name)
+            founded_data = search_data(data)
+            if founded_data == []:
+                print('Ничего не найдено!')
+            elif len(founded_data) > 1:
+                show_data(founded_data)
+                change_index = int(input('Найдено несколько строк. Какую строку изменить?: '))
+                change_file(file_name, founded_data[change_index-1], change_data(founded_data[change_index-1]))
+            else:
+                show_data(founded_data)
+                change_file(file_name, founded_data[0], change_data(founded_data[0]))
         else:
             print('Некорректный ввод!')
 
