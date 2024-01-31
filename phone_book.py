@@ -108,7 +108,10 @@ def change_file(file, first_str, second_str):
     for i in range(len(data)):
         if first_str in data[i]:
             index = i
-    data[index] = second_str
+    if second_str == []:
+        data.pop(index)
+    else:
+        data[index] = second_str
     with open(file, 'w', encoding='utf-8') as f:
         f.writelines(data)
 
@@ -122,6 +125,7 @@ def main():
         print('3 - найти запись в справочнике ')
         print('4 - скопировать данные из справочника в другой файл')
         print('5 - изменить данные в справочнике')
+        print('6 - удалить запись в справочнике')
         answer = input('Выберите действие: ')
         if answer == '0':
             flag = False
@@ -149,9 +153,25 @@ def main():
                 show_data(founded_data)
                 change_index = int(input('Найдено несколько строк. Какую строку изменить?: '))
                 change_file(file_name, founded_data[change_index-1], change_data(founded_data[change_index-1]))
+                print('Запись изменена!')
             else:
                 show_data(founded_data)
                 change_file(file_name, founded_data[0], change_data(founded_data[0]))
+                print('Запись изменена!')
+        elif answer == '6':
+            data = read_file(file_name)
+            founded_data = search_data(data)
+            if founded_data == []:
+                print('Ничего не найдено!')
+            elif len(founded_data) > 1:
+                show_data(founded_data)
+                change_index = int(input('Найдено несколько строк. Какую строку удалить?: '))
+                change_file(file_name, founded_data[change_index-1], [])
+                print('Запись удалена!')
+            else:
+                show_data(founded_data)
+                change_file(file_name, founded_data[0], [])
+                print('Запись удалена!')
         else:
             print('Некорректный ввод!')
 
